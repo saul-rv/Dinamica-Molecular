@@ -3,3 +3,4 @@
 ### Integrantes:
 
 * Saúl Rodríguez Víquez - C5J102
+* Mauro Cerdas Flores - C31960
