@@ -1,39 +1,104 @@
 #include <iostream>
 #include <cmath>
+#include <GLFW/glfw3.h>
 
 #include "particle.hpp"
 
-double distance(Particle particle1, Particle particle2){
-  double dis = 0;
+double distance(Particle& particle1, Particle& particle2){
+  double dis = 0.0;
   for (int i = 0; i<3; i++){
     dis += (particle1.pos[i]-particle2.pos[i])*(particle1.pos[i]-particle2.pos[i]);
   }
   return std::sqrt(dis);
 }
 
-void colision(Particle particle1, Particle particle2){
-  double a = 0;
-  double b = 0;
+void colision(Particle& particle1, Particle& particle2){
+  double a = 0.0;
+  double b = 0.0;
   for (int i = 0; i<3; i++){
-    a += (particle1.vel[i] - particle2.vel[i])*(particle1.pos[i]-particle2.pos[i]);
-    b += (particle1.pos[i]-particle2.pos[i])*(particle1.pos[i]-particle2.pos[i]);
+    a += (particle1.vel[i] - particle2.vel[i])*(particle1.pos[i]-particle2.pos[i]); // dx * dv
+    b += (particle1.pos[i]-particle2.pos[i])*(particle1.pos[i]-particle2.pos[i]); // (dx)^2
   }
 
   // Particles are already moving away from each other,
   // no need to modify velocities
-  if (a>0) return; 
+  if (a>0.0) return; 
 
   for (int i = 0; i<3; i++){
     particle1.vel[i] -= (particle1.pos[i]-particle2.pos[i])*a/b;
-    particle2.vel[i] -= (particle1.pos[i]-particle2.pos[i])*a/b;
+    particle2.vel[i] += (particle1.pos[i]-particle2.pos[i])*a/b;
   }
 
 }
 
+// Draw particle with glfw
+void drawParticles(const std::array<Particle, 8>& particles){
+  glPointSize(18.0f); // Size 
+  glColor3f(0.1f, 0.8f, 1.0f); // Color
+  
+ // TODO: Make sphere instead of square 
+  glBegin(GL_POINTS);
+  
+  for (const Particle& p : particles){
+    glVertex3f(p.pos[0], p.pos[1], p.pos[2]);
+  }
+
+  glEnd();
+}
+
+// Tells How to se a 3d space in 2d screen
+void setupCamera(double t){
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+
+  glOrtho(-0.5, 1.5, -0.5, 1.5, -5.0, 5.0);
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+
+  glTranslatef(0.5f, 0.5f, -1.5f);    // Moves Scene
+  glRotatef(25.0f, 1.0f, 0.0f, 0.0f); // Rotates 25 degrees in X
+  glRotatef(t * 5.0f + 45.0f, 0.0f, 1.0f, 0.0f); // Rotates 45 degrees in Y
+  glTranslatef(-0.5f, -0.5f, -0.5f);  // Moves Scene
+}
+
+void drawBox() {
+  glColor3f(0.0f, 0.0f, 0.0f);
+  glLineWidth(2.0f);
+
+  glBegin(GL_LINES);
+
+  // Bottom face z = 0
+  glVertex3f(0, 0, 0); glVertex3f(1, 0, 0);
+  glVertex3f(1, 0, 0); glVertex3f(1, 1, 0);
+  glVertex3f(1, 1, 0); glVertex3f(0, 1, 0);
+  glVertex3f(0, 1, 0); glVertex3f(0, 0, 0);
+
+  // Top face z = 1
+  glVertex3f(0, 0, 1); glVertex3f(1, 0, 1);
+  glVertex3f(1, 0, 1); glVertex3f(1, 1, 1);
+  glVertex3f(1, 1, 1); glVertex3f(0, 1, 1);
+  glVertex3f(0, 1, 1); glVertex3f(0, 0, 1);
+
+  // Vertical lines
+  glVertex3f(0, 0, 0); glVertex3f(0, 0, 1);
+  glVertex3f(1, 0, 0); glVertex3f(1, 0, 1);
+  glVertex3f(1, 1, 0); glVertex3f(1, 1, 1);
+  glVertex3f(0, 1, 0); glVertex3f(0, 1, 1);
+
+  glEnd();
+}
 
 int main(){
-  double t = 0;
-  double tf = 10;
+  // Create all Graphic
+  glfwInit();
+  GLFWwindow* window = glfwCreateWindow(800, 600, "Sistema de Particulas", nullptr, nullptr);
+  glfwMakeContextCurrent(window);
+  glEnable(GL_DEPTH_TEST);
+  glClearColor(0.92f, 0.92f, 0.92f, 1.0f);
+
+  double t = 0.0;
+  double tf = 10.0;
   double dt = 0.01;
 
   std::array<Particle, 8> particles = {
@@ -47,10 +112,14 @@ int main(){
     Particle({0.75,0.75,0.75}),
   };
 
-  while (t <= tf){
-    std::cout << t << '\n';
-    // TODO: Draw Particles
-
+  while (!glfwWindowShouldClose(window) && t <= tf){
+    // std::cout << t << '\n';
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Errase last frame
+    setupCamera(t);					// Sets Scene
+    drawBox();						// Draw Box
+    drawParticles(particles); 				// Draw Particle
+    glfwSwapBuffers(window); 				// Sync Window
+    glfwPollEvents();	      				// =
 
     // TODO: Add spatial hashing
     for (int i=0; i<particles.size(); i++){
@@ -71,6 +140,7 @@ int main(){
 
     t += dt;
   }
-
+  
+  glfwTerminate(); // Cleans Glfw Library
   return 0;
 }
