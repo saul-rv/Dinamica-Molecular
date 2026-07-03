@@ -1,0 +1,28 @@
+name: Build C++ Simulation
+
+on:
+  push:
+    branches: [ main, patch-1 ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y libglfw3-dev libgl1-mesa-dev cmake
+
+      - name: Configure CMake
+        working-directory: c++
+        run: cmake -B build
+
+      - name: Build
+        working-directory: c++
+        run: cmake --build build
