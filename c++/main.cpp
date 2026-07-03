@@ -69,14 +69,10 @@ void drawSphere(float cx, float cy, float cz, float r) {
 void drawParticles(const std::array<Particle, 8>& particles){
   glPointSize(18.0f); // Size 
   glColor3f(0.1f, 0.8f, 1.0f); // Color
-  
-  // TODO: Make sphere instead of square 
-    
+
   for (const Particle& p : particles){
     drawSphere(p.pos[0], p.pos[1], p.pos[2], p.radius);
   }
-
- 
 }
 
 // Tells How to se a 3d space in 2d screen
@@ -126,6 +122,11 @@ int main(){
   // Create all Graphic
   glfwInit();
   GLFWwindow* window = glfwCreateWindow(800, 600, "Sistema de Particulas", nullptr, nullptr);
+  if (!window) {
+    std::cerr << "Error: no se pudo crear la ventana de GLFW." << std::endl;
+    glfwTerminate();
+    return -1;
+  }
   glfwMakeContextCurrent(window);
   glEnable(GL_DEPTH_TEST);
   glClearColor(0.92f, 0.92f, 0.92f, 1.0f);
