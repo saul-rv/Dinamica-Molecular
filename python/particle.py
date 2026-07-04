@@ -15,7 +15,7 @@ class Particle:
     """
 
     radius = 0.1
-    def __init__(self, pos, vel=None):
+    def __init__(self, pos, vel=None, radius=None):
         """Initializes the instance with an initial position and velocity.
 
         vel is initialized as None so that each particle can be assigned
@@ -33,6 +33,9 @@ class Particle:
 
         self.velX = vel[0]
         self.velY = vel[1]
+        
+        if radius is not None:
+            self.radius = radius
 
     def move(self, dt):
         self.posX += dt*self.velX
