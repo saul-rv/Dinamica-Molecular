@@ -3,21 +3,24 @@
 
 #include <array>
 
+constexpr double radius = 0.01;
+
 class Particle {
   public:
-    double radius;
 
     // Arrays since size is fixed
     std::array<double,3> pos;
     std::array<double,3> vel;
 
     Particle(); // Random position and velocity
-    Particle(double r); // Random position and velocity
     Particle(std::array<double,3> pos); // Random Velocity
     Particle(std::array<double,3> pos, std::array<double,3> vel);
 
     void move(double dt);
     void edgeColision();
 };
+
+void colision(Particle &p1, Particle &p2);
+double distanceSq(Particle &p1, Particle &p2);
 
 #endif

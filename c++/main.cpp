@@ -5,33 +5,6 @@
 
 #include "particle.hpp"
 
-double distance(Particle& particle1, Particle& particle2){
-  double dis = 0.0;
-  for (int i = 0; i<3; i++){
-    dis += (particle1.pos[i]-particle2.pos[i])*(particle1.pos[i]-particle2.pos[i]);
-  }
-  return std::sqrt(dis);
-}
-
-void colision(Particle& particle1, Particle& particle2){
-  double a = 0.0;
-  double b = 0.0;
-  for (int i = 0; i<3; i++){
-    a += (particle1.vel[i] - particle2.vel[i])*(particle1.pos[i]-particle2.pos[i]); // dx * dv
-    b += (particle1.pos[i]-particle2.pos[i])*(particle1.pos[i]-particle2.pos[i]); // (dx)^2
-  }
-
-  // Particles are already moving away from each other,
-  // no need to modify velocities
-  if (a>0.0) return; 
-
-  for (int i = 0; i<3; i++){
-    particle1.vel[i] -= (particle1.pos[i]-particle2.pos[i])*a/b;
-    particle2.vel[i] += (particle1.pos[i]-particle2.pos[i])*a/b;
-  }
-
-}
-
 // Draw Sphere for particle
 void drawSphere(float cx, float cy, float cz, float r) {
   const int stacks = 12;
@@ -71,13 +44,9 @@ void drawParticles(const std::vector<Particle>& particles){
   glPointSize(18.0f); // Size 
   glColor3f(0.1f, 0.8f, 1.0f); // Color
   
-  // TODO: Make sphere instead of square 
-    
   for (const Particle& p : particles){
-    drawSphere(p.pos[0], p.pos[1], p.pos[2], p.radius);
+    drawSphere(p.pos[0], p.pos[1], p.pos[2], radius);
   }
-
- 
 }
 
 // Tells How to show 3d space in a 2d screen
@@ -146,7 +115,7 @@ int main(){
   std::vector<Particle> particles;
   particles.reserve(n);
   for (int i=0; i<n; i++){
-      particles.emplace_back(0.01);
+      particles.emplace_back();
   }
 
   while (!glfwWindowShouldClose(window) && t <= tf){
@@ -161,8 +130,8 @@ int main(){
     // TODO: Add spatial hashing
     for (int i=0; i<particles.size(); i++){
       for (int j=i+1; j<particles.size(); j++){
-        if (distance(particles[i],particles[j]) <= 2*particles[i].radius){
-          colision(particles[i],particles[j]);
+        if (distanceSq(particles[i], particles[j]) <= 4*radius*radius){
+          colision(particles[i], particles[j]);
         }
       }
     }
