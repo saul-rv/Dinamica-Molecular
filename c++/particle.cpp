@@ -4,38 +4,53 @@
 
 #include "particle.hpp"
 
-Particle::Particle(){
-  // Generates a non-deterministic number between 0.1 and 0.9
+namespace {
+  // Generates a non-deterministic number
   // for the initial velocity and position
+  // Separated into a namespace to make it
+  // shared among particles
   std::random_device rd;
   std::mt19937 gen(rd());
-  std::uniform_real_distribution<> dis(0.1, 0.9);
+  std::uniform_real_distribution<> disPos(0.1, 0.9);
+  std::uniform_real_distribution<> disVel(-1, 1);
+}
 
-  pos = {dis(gen), dis(gen), dis(gen)};
-  vel = {dis(gen), dis(gen), dis(gen)};
+Particle::Particle(){
+  pos = {disPos(gen), disPos(gen), disPos(gen)};
+  vel = {disVel(gen), disVel(gen), disVel(gen)};
+
+  calculateGridPos();
 }
 
 Particle::Particle(std::array<double,3> position){
   pos = position;
+  vel = {disVel(gen), disVel(gen), disVel(gen)};
 
-  // Generates a non-deterministic number between 0.2 and 1
-  // as the initial velocity
-  std::random_device rd;
-  std::mt19937 gen(rd());
-  std::uniform_real_distribution<> dis(0.2, 1.0);
-
-  vel = {dis(gen), dis(gen), dis(gen)};
+  calculateGridPos();
 }
 
 Particle::Particle(std::array<double,3> position, std::array<double,3> velocity){
   pos = position;
   vel = velocity;
+  calculateGridPos();
+}
+
+int cellIndex(double coord){
+  int index = std::floor(coord/(2*radius));
+  if (index < 0) index = 0;
+  if (index >= lenGrid) index = lenGrid - 1;
+  return index;
+}
+
+void Particle::calculateGridPos(){
+  gridPos = lenGrid*lenGrid*cellIndex(pos[0]) + lenGrid*cellIndex(pos[1]) + cellIndex(pos[2]);
 }
 
 void Particle::move(double dt){
   for (int i=0; i<3; i++){
     pos[i] += dt*vel[i];
   }
+  calculateGridPos();
 }
 
 void Particle::edgeColision(){
@@ -61,9 +76,15 @@ void colision(Particle &p1, Particle &p2){
   // no need to modify velocities
   if (a>0.0) return; 
 
+  // Randomly positioned particles can get very close,
+  // stops them from exploding
+  if (b < 1e-8) b = 1e-8;
+
+  double c = a/b;
+
   for (int i = 0; i<3; i++){
-    p1.vel[i] -= (p1.pos[i]-p2.pos[i])*a/b;
-    p2.vel[i] += (p1.pos[i]-p2.pos[i])*a/b;
+    p1.vel[i] -= (p1.pos[i]-p2.pos[i])*c;
+    p2.vel[i] += (p1.pos[i]-p2.pos[i])*c;
   }
 }
 

@@ -3,7 +3,8 @@
 
 #include <array>
 
-constexpr double radius = 0.01;
+constexpr double radius = 0.005;
+constexpr int lenGrid = std::ceil(0.5/radius);
 
 class Particle {
   public:
@@ -12,10 +13,13 @@ class Particle {
     std::array<double,3> pos;
     std::array<double,3> vel;
 
+    int gridPos;
+
     Particle(); // Random position and velocity
     Particle(std::array<double,3> pos); // Random Velocity
     Particle(std::array<double,3> pos, std::array<double,3> vel);
 
+    void calculateGridPos();
     void move(double dt);
     void edgeColision();
 };
