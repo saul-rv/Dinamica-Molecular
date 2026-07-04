@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <cmath>
 #include <GLFW/glfw3.h>
 
@@ -66,7 +67,7 @@ void drawSphere(float cx, float cy, float cz, float r) {
 }
 
 // Draw particle with glfw
-void drawParticles(const std::array<Particle, 8>& particles){
+void drawParticles(const std::vector<Particle>& particles){
   glPointSize(18.0f); // Size 
   glColor3f(0.1f, 0.8f, 1.0f); // Color
   
@@ -79,7 +80,7 @@ void drawParticles(const std::array<Particle, 8>& particles){
  
 }
 
-// Tells How to se a 3d space in 2d screen
+// Tells How to show 3d space in a 2d screen
 void setupCamera(double t){
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -123,7 +124,7 @@ void drawBox() {
 }
 
 int main(){
-  // Create all Graphic
+  // Create all Graphics
   glfwInit();
   GLFWwindow* window = glfwCreateWindow(800, 600, "Sistema de Particulas", nullptr, nullptr);
   glfwMakeContextCurrent(window);
@@ -141,16 +142,12 @@ int main(){
   double tf = 10.0;
   double dt = 0.01;
 
-  std::array<Particle, 8> particles = {
-    Particle({0.25,0.25,0.25}),
-    Particle({0.25,0.25,0.75}),
-    Particle({0.25,0.75,0.25}),
-    Particle({0.25,0.75,0.75}),
-    Particle({0.75,0.25,0.25}),
-    Particle({0.75,0.25,0.75}),
-    Particle({0.75,0.75,0.25}),
-    Particle({0.75,0.75,0.75}),
-  };
+  int n = 500;
+  std::vector<Particle> particles;
+  particles.reserve(n);
+  for (int i=0; i<n; i++){
+      particles.emplace_back(0.01);
+  }
 
   while (!glfwWindowShouldClose(window) && t <= tf){
     // std::cout << t << '\n';
