@@ -4,9 +4,6 @@
 #include <array>
 
 class Particle {
-  private:
-    // Where do I place it?
-    Particle();
   public:
     double radius;
 
@@ -14,7 +11,9 @@ class Particle {
     std::array<double,3> pos;
     std::array<double,3> vel;
 
-    Particle(std::array<double,3> pos);
+    Particle(); // Random position and velocity
+    Particle(double r); // Random position and velocity
+    Particle(std::array<double,3> pos); // Random Velocity
     Particle(std::array<double,3> pos, std::array<double,3> vel);
 
     void move(double dt);
