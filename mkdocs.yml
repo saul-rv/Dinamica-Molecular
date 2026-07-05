@@ -7,7 +7,7 @@ nav:
   - Explicación del Problema: explication.md
   - Compilación: compilation.md
   - Resultados: results.md
-  - Referencias: references.md
+  - Referencia: reference.md
 
 plugins:
   - search

@@ -106,10 +106,6 @@ records = [(0.0, idx+1, p.posX, p.posY, p.velX, p.velY,
 frame_num = 0
 save_frame(particles, t, frame_num)
 
-print(f"{t:.2f}:")
-print(f"p1 = {particles[0].posX},{particles[0].posY}")
-print(f"p2 = {particles[1].posX},{particles[1].posY}")
-
 while (t <= tf):
     t += dt
     for p in particles:
@@ -134,10 +130,6 @@ while (t <= tf):
 
     frame_num += 1
     save_frame(particles, t, frame_num)
-
-    print(f"{t:.2f}:")
-    print(f"p1 = {particles[0].posX},{particles[0].posY}")
-    print(f"p2 = {particles[1].posX},{particles[1].posY}")
 
 # Export CSV
 csv_path = os.path.join(code_dir, 'results_python.csv')

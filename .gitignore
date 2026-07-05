@@ -1,7 +1,12 @@
 python/__pycache__/
 python/simulation.gif
 python/frames/
+python/results_python.csv
+python/boltzmann.gif
+python/boltzmann_static.png
 c++/*.o
+c++/*.x
 c++/a.out
+site/
 devenv.*
 .devenv/
