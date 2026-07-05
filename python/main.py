@@ -11,7 +11,6 @@ from PIL import Image
 
 code_dir = os.path.dirname(os.path.abspath(__file__))
 
-
 def distance(particle1, particle2):
     '''Returns the distance between 2 particles
 
@@ -27,7 +26,7 @@ def colision(particle1, particle2):
     '''Modifies the velocity of 2 colliding particles
 
     The calculation is based on the equation found in:
-    https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional_collision_with_two_moving_objects
+    <https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional_collision_with_two_moving_objects>.
     It additionally verifies that the particles are moving towards each other, and otherwise does not
     modify their velocities
 
@@ -96,7 +95,6 @@ tf = 20
 dt = 0.02
 particles = [Particle([0.25,0.25]), Particle([0.75,0.75]),
              Particle([0.25,0.75]), Particle([0.75,0.25])]
-x_register = [p.posX for p in particles]
 
 # Register data for CSV
 records = [(0.0, idx+1, p.posX, p.posY, p.velX, p.velY,
@@ -123,9 +121,6 @@ while (t <= tf):
 
     for p in particles:
         p.edgeColision()
-
-    for p in particles:
-        x_register.append(p.posX)
 
     # Save data for CSV
     for idx, p in enumerate(particles):

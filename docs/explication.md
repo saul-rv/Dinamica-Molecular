@@ -7,8 +7,8 @@ Milestones:
 - Implementar la solución en Python.
 - Inicializar el sistema a partir de posiciones conocidas y una distribucion de velocidades aleatoria.
 - Elaborar subrutinas que evalúan si los discos chocan con la pared o chocan entre ellos (choques a pares) y a la vez calculen las nuevas velocidades (magnitud y dirección) y posiciones del sistema. Considere que no se pierde energía en estos choques.
-- Determinar cuál es el evento más próximo a suceder (ya sea colisión con pared o colisión a pares) y en qué momento se da.
-- Mover todos los discos la distancia correspondiente a este tiempo y evaluar de nuevo cuándo es el siguiente choque dentro del sistema de nuevo.
+- <span style="text-decoration: line-through;">Determinar cuál es el evento más próximo a suceder (ya sea colisión con pared o colisión a pares) y en qué momento se da</span>.
+- <span style="text-decoration: line-through;">Mover todos los discos la distancia correspondiente a este tiempo y evaluar de nuevo cuándo es el siguiente choque dentro del sistema de nuevo</span>.
 - Visualizar por medio de matplotlib la posición de cada uno de los discos dentro de la caja y guardar el correspondiente archivo para realizar una película al final del calculo.
 - Aumentar el número de discos presentes, así como también poder variar el radio $r$ de los discos.
 - Elaborar un histograma de las posiciones de los centros de los discos a lo largo del eje $x$.

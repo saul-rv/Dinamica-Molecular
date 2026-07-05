@@ -7,11 +7,11 @@ class Particle:
     outside of a list for better performance.
 
     Atttibutes:
-        posX: A float indicating the x position of the particle
-        posY: A float indicating the y position of the particle
-        velX: A float indicating the x velocity of the particle
-        velY: A float indicating the y velocity of the particle
-        radius: A float indicating the fixed radius of the particle
+        - posX: A float indicating the x position of the particle
+        - posY: A float indicating the y position of the particle
+        - velX: A float indicating the x velocity of the particle
+        - velY: A float indicating the y velocity of the particle
+        - radius: A float indicating the fixed radius of the particle
     """
 
     radius = 0.1
@@ -22,14 +22,15 @@ class Particle:
         a different random velocity by default.
 
         Args:
-            pos: List with initial position
-            vel: List with initial velocity
+            pos: List with initial x,y,z position components
+            vel: List with initial x,y,z velocity componentes
+            radius: Float
         """
         self.posX = pos[0]
         self.posY = pos[1]
 
         if vel is None:
-            vel = [random.random() for _ in range(2)]
+            vel = [random.uniform(-1.0,1.0) for _ in range(2)]
 
         self.velX = vel[0]
         self.velY = vel[1]

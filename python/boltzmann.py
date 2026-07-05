@@ -1,24 +1,3 @@
-"""
-boltzmann.py — Distribución de Maxwell-Boltzmann (2D)
-══════════════════════════════════════════════════════
-
-Read results_python.csv and generate:
-
-  · boltzmann.gif        →  histogram animated 
-  · boltzmann_static.png →  final results histogram
-
-The 2D Maxwell-Boltzmann distribution for speed v is the Rayleigh distribution:
-
-    f(v) = a · v · exp(−a · v² / 2)   con  a = 2 / <v²>
-
-'a' is estimated directly from the accumulated data of each frame..
-
-Execute:
-    python3 boltzmann.py
-
-Requirement: main.py must be executed first to generate results_python.csv.
-"""
-
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
