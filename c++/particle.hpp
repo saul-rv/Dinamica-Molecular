@@ -1,10 +1,11 @@
 #ifndef PARTICLE_HPP
 #define PARTICLE_HPP
 
+#include <cmath>
 #include <array>
 
-constexpr double radius = 0.005;
-constexpr int lenGrid = std::ceil(0.5/radius);
+const double radius = 0.003;
+const int lenGrid = std::ceil(0.5/radius);
 
 class Particle {
   public:
