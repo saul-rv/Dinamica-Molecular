@@ -1,0 +1,19 @@
+# Resultados del Programa
+
+## Versión de Python
+
+Al ejecutarse main.py
+
+![simulationgif](simulation.gif){ style="display: block; margin: 0 auto;" }
+
+Además se crea un archivo **results_python.csv**, con los valores recopilados durante la simulación.
+
+Utilizando los valores recopilados anteriormente, cuando se ejecuta boltzmann.py
+
+![boltzmanngif](boltzmann.gif){ style="display: block; margin: 0 auto;" }
+
+Además de una imagen del resultado final
+
+![boltzmannimage](boltzmann_static.png){ style="display: block; margin: 0 auto;" }
+
+## Versión de C++
