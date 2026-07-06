@@ -71,7 +71,7 @@ def edgeColision(self):
 
 #### Python - colision():
 
-Calcula las nuevas velocidades de dos discos que se solapan. El algoritmo primero verifica que los discos se estén acercando, si el producto punto entre la diferencia de velocidades y la diferencia de posiciones es positivo, las partículas ya se están separando y no se modifica ninguna velocidad. De lo contrario, se aplica la fórmula de colisión elástica bidimensional.
+Calcula las nuevas velocidades de dos discos que se solapan. El algoritmo primero verifica que los discos se estén acercando, si el producto punto entre la diferencia de velocidades y la diferencia de posiciones es positivo, las partículas ya se están separando y no se modifica ninguna velocidad. De lo contrario, se aplica la fórmula de colisión elástica bidimensional
 
 ```
 def colision(particle1, particle2):
