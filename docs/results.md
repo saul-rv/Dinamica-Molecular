@@ -16,4 +16,6 @@ Además de una imagen del resultado final
 
 ![boltzmannimage](boltzmann_static.png){ style="display: block; margin: 0 auto;" }
 
+Este resultado no converge por completo a la curva teórica, esto se debe a la cantidad de particulas. Maxwell-Boltzmann es un resultado estadistico válido en $N \rightarrow \infty$. Si se desea un resultado más fidedigno al teórico, basta con ir aumentando el número de particulas dentro de la simulación.
+
 ## Versión de C++
