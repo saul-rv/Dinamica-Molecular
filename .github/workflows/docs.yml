@@ -27,5 +27,6 @@ jobs:
           mkdocs-material \
           mkdocs-get-deps \
           mkdocstrings \
-          mkdocstrings-python
+          mkdocstrings-python \
+          pygments
       - run: mkdocs gh-deploy --force

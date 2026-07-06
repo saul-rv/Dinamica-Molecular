@@ -13,7 +13,21 @@ Milestones:
 
 # Fundamentos
 
-**Toda la mate y fisica para resolver, analisis y ecuaciones**
+Para la simulación, se supone que las partículas se pueden modelar utilizando las ecuaciones de cinemática.
+Mientras estas no colisionan, se supone que se mueven a velocidad constante:
+$$
+x(t) = x_0 + v_xt
+$$
+Y análogamente en las demás dimensiones. Las partículas se mueven en intervalos de tiempo $dt$ y para revisar
+colisiones constantemente. Con las paredes, las colisiones se suponen elásticas, por lo que
+únicamente la dirección de las velocidades es modificada (invertida en la dirección perpendicular a la colisión).
+Para las colisiones entre partículas, la conservación de la energía y del momentum llevan al resultado:
+$$
+\textbf{v}'_1 = \textbf{v}_1 - \frac{2m_2}{m_1+m_2} \frac{(\textbf{v}_1-\textbf{v}_2)\cdot(\textbf{x}_1-\textbf{x}_2)}{|\textbf{x}_1-\textbf{x}_2|^2} (\textbf{x}_1 - \textbf{x}_2 )
+$$
+$$
+\textbf{v}'_2 = \textbf{v}_2 - \frac{2m_1}{m_1+m_2} \frac{(\textbf{v}_2-\textbf{v}_1)\cdot(\textbf{x}_2-\textbf{x}_1)}{|\textbf{x}_2-\textbf{x}_1|^2} (\textbf{x}_1 - \textbf{x}_2 )
+$$
 
 # Solución del Problema
 
@@ -45,13 +59,12 @@ Al tener las condiciones iniciales del sistema establecidas, lo siguiente es det
 
 ### Colisión entre paredes
 
-#### Python - edgeColision():
+#### Python:
 
 La clase Particle verifica, para cada componente espacial, si el disco ha alcanzado o sobrepasado el límite de la caja considerando su radio. Al detectarse una colisión, la componente de velocidad perpendicular a la pared se invierte tomando su valor absoluto, lo cual garantiza que el disco siempre se aleje de la pared independientemente de si llegó exactamente al límite o lo cruzó ligeramente por efecto del paso de tiempo discreto.
 
-```
+```python
 def edgeColision(self):
-        """Checks for colision with edges."""
         if self.posX <= self.radius:
             self.velX = abs(self.velX)
         elif self.posX >= 1-self.radius:
@@ -63,27 +76,27 @@ def edgeColision(self):
             self.velY = -abs(self.velY)
 ```
 
-#### C++ - 
+#### C++:
+```c++
+void Particle::edgeColision(){
+  for (int i=0; i<3; i++){
+    if (pos[i] <= radius){
+      vel[i] = std::abs(vel[i]);
+    }
+    else if (pos[i] >= 1-radius){
+      vel[i] = -std::abs(vel[i]);
+    }
+  }
+}
+```
 
 ### Colisión entre discos
 
-#### Python - colision():
+#### Python:
 
 Calcula las nuevas velocidades de dos discos que se solapan. El algoritmo primero verifica que los discos se estén acercando, si el producto punto entre la diferencia de velocidades y la diferencia de posiciones es positivo, las partículas ya se están separando y no se modifica ninguna velocidad. De lo contrario, se aplica la fórmula de colisión elástica bidimensional
-
-```
+```python
 def colision(particle1, particle2):
-    '''Modifies the velocity of 2 colliding particles
-
-    The calculation is based on the equation found in:
-    https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional_collision_with_two_moving_objects
-    It additionally verifies that the particles are moving towards each other, and otherwise does not
-    modify their velocities
-
-    Args:
-        particle1: First particle whose velocity to modify
-        particle1: Second particle whose velocity to modify
-    '''
     a = (particle1.velX-particle2.velX)*(particle1.posX-particle2.posX) \
         + (particle1.velY-particle2.velY)*(particle1.posY-particle2.posY)
     if a>0: return
@@ -95,7 +108,19 @@ def colision(particle1, particle2):
     particle2.velY -= (particle2.posY-particle1.posY)*a/b
 ```
 
-#### C++ - 
+#### C++:
+```c++
+void Particle::edgeColision(){
+  for (int i=0; i<3; i++){
+    if (pos[i] <= radius){
+      vel[i] = std::abs(vel[i]);
+    }
+    else if (pos[i] >= 1-radius){
+      vel[i] = -std::abs(vel[i]);
+    }
+  }
+}
+```
 
 ## Visualización
 
@@ -107,7 +132,7 @@ $$
 f(v) = a · v · \exp(\frac{-a · v^2}{2}), \qquad con \quad a = \frac{2}{<v^2>}
 $$
 
-```
+```python
 def mb_2d(v, v2_mean):
     """Maxwell-Boltzmann in 2 dimensions (Rayleigh distribution).
 

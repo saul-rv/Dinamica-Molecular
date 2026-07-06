@@ -9,9 +9,9 @@ class Particle:
     Atttibutes:
         - posX: A float indicating the x position of the particle
         - posY: A float indicating the y position of the particle
-        - radius: A float indicating the fixed radius of the particle
         - velX: A float indicating the x velocity of the particle
         - velY: A float indicating the y velocity of the particle
+        - radius: A float indicating the fixed radius of the particle
     """
 
     def __init__(self, pos, vel=None, radius=0.1):

@@ -9,7 +9,10 @@ Para compilar y ejecutar este proyecto se deben realizar las acciones mostradas 
     python3 main.py
     python3 boltzmann.py
 ```
-
+El script boltzmann.py también se puede utilizar de manera independiente para analizar otro archivo .csv:
+```
+    python3 boltzmann.py example.csv
+```
 ## Versión de C++
 
 ### Instalacion de dependencias OpenGL
@@ -29,8 +32,15 @@ En Debian / Ubuntu / Linux Mint:
 
 ### Compilacion
 
+Versión gráfica (c++/graphics)
 ```
-    g++ -c particle.cpp -o particle.o 
-    g++ main.cpp particle.o -o particle.x -lglfw -lGL
+    g++ -c particle.cpp -c graphics.cpp -O3
+    g++ main.cpp *.o -o particle.x -lglfw -lGL -O3
+    ./particle.x
+```
+Versión datos, produce un csv con las velocidades y posiciones (c++/data)
+```
+    g++ -c particle.cpp -O3
+    g++ main.cpp *.o -o particle.x -lglfw -lGL -O3
     ./particle.x
 ```
