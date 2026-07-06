@@ -1,6 +1,10 @@
 python/__pycache__/
 python/simulation.gif
 python/frames/
+python/results_python.csv
+python/boltzmann.gif
+python/boltzmann_static.png
+python/histogram_pos_x.png
 c++/*.o
 c++/a.out
 devenv.*

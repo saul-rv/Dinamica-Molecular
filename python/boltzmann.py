@@ -1,36 +1,27 @@
 import numpy as np
-import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import csv
+import pandas as pd
 import os
 import sys
-from collections import defaultdict
 
-code_dir = os.path.dirname(os.path.abspath(__file__))
-CSV_PATH = os.path.join(code_dir, 'results_python.csv')
+codeDir = os.path.dirname(os.path.abspath(__file__))
 
+if len(sys.argv) > 1:
+    csvPath = os.path.join(codeDir, sys.argv[1])
+else:
+    csvPath = os.path.join(codeDir, 'results_python.csv')
 
-# Verify CSV file exists
-if not os.path.exists(CSV_PATH):
-    print(f"Error: not found'{CSV_PATH}'")
-    print("Execute main.py first to generate the CSV file.")
+if not os.path.exists(csvPath):
+    print(f"Error: '{csvPath}' not found")
     sys.exit(1)
 
-# Read CSV 
-speeds_by_time = defaultdict(list)
-with open(CSV_PATH, 'r', newline='') as f:
-    reader = csv.DictReader(f)
-    for row in reader:
-        speeds_by_time[float(row['t'])].append(float(row['speed']))
-unique_times  = sorted(speeds_by_time.keys())
-total_records = sum(len(v) for v in speeds_by_time.values())
+data = pd.read_csv(csvPath)
 
+unique_times = data['t'].unique()
+speeds_by_time = data.groupby('t')['speed'].apply(list).to_dict()
 
-# Create frames for the animation
-step       = max(1, len(unique_times) // 100)
-anim_times = set(unique_times[::step])
+anim_times = unique_times[::10] 
 
 cumulative = []
 frame_data = []
@@ -38,28 +29,9 @@ frame_data = []
 for t_val in unique_times:
     cumulative.extend(speeds_by_time[t_val])
     if t_val in anim_times:
-        frame_data.append((t_val, np.array(cumulative, dtype=float)))
+       frame_data.append((t_val, np.array(cumulative, dtype=float)))
 
-# Maxwell-Boltzmann 2D
-def mb_2d(v, v2_mean):
-    """Maxwell-Boltzmann in 2 dimensions (Rayleigh distribution).
-
-    f(v) = a · v · exp(−a · v² / 2)   con  a = 2 / <v²>
-
-    Args:
-        v:       array of speed values
-        v2_mean: estimated mean of v²
-
-    Returns:
-        Array values of the Maxwell-Boltzmann distribution
-    """
-    if v2_mean <= 0:
-        return np.zeros_like(v)
-    a = 2.0 / v2_mean
-    return a * v * np.exp(-a * v**2 / 2)
-
-
-# Gif
+# Animation
 fig, ax = plt.subplots(figsize=(8, 5))
 
 def update(frame_idx):
@@ -69,43 +41,45 @@ def update(frame_idx):
     ax.hist(speeds, bins=20, color='tomato', edgecolor='white',
             density=True, alpha=0.80, label='Simulated data (2D)')
 
-    v2_mean = np.mean(speeds**2)
-    if v2_mean > 0:
-        v_max   = speeds.max() * 1.15 + 0.01
-        v_range = np.linspace(0, v_max, 200)
-        ax.plot(v_range, mb_2d(v_range, v2_mean), 'b--', lw=2.2,
-                label='Maxwell-Boltzmann theoretical (2D)')
-
     ax.set_xlabel('Speed |v|', fontsize=11)
     ax.set_ylabel('Probability density', fontsize=11)
-    ax.set_title(f'Maxwell-Boltzmann distribution — t = {t_val:.2f}', fontsize=12)
+    ax.set_title(f'Distribución de las velocidades — t = {t_val:.2f}', fontsize=12)
     ax.legend(loc='upper right', fontsize=10)
-    return []
 
-ani      = animation.FuncAnimation(fig, update, frames=len(frame_data), blit=False)
-gif_path = os.path.join(code_dir, 'boltzmann.gif')
+ani = animation.FuncAnimation(fig, update, frames=len(frame_data), blit=False)
+gif_path = os.path.join(codeDir, 'boltzmann.gif')
 ani.save(gif_path, writer='pillow', fps=10)
 plt.close(fig)
 print(f"  GIF saved: boltzmann.gif  ({len(frame_data)} frames)")
 
-
-# Graphic static final values
-all_speeds = np.array(cumulative, dtype=float)
-v2_mean    = np.mean(all_speeds**2)
-v_max      = all_speeds.max() * 1.15
-v_range    = np.linspace(0, v_max, 300)
-
+# Final Speed Distribution
 fig, ax = plt.subplots(figsize=(8, 5))
-ax.hist(all_speeds, bins=25, color='tomato', edgecolor='white',
+
+ax.hist(data['speed'],
+        bins=25, color='tomato', edgecolor='white',
         density=True, alpha=0.80, label='Simulated data (2D)')
-ax.plot(v_range, mb_2d(v_range, v2_mean), 'b--', lw=2.5,
-        label='Maxwell-Boltzmann theoretical (2D)')
-ax.set_xlabel('Speed |v|', fontsize=12)
-ax.set_ylabel('Probability density', fontsize=12)
-ax.set_title('Maxwell-Boltzmann distribution — (2D, 4 particles)', fontsize=13)
+ax.set_xlabel('Rapidez |v|', fontsize=12)
+ax.set_ylabel('Densidad de Probabilidad', fontsize=12)
+ax.set_title('Distribución de rapideces final', fontsize=13)
 ax.legend(fontsize=11)
 plt.tight_layout()
-static_path = os.path.join(code_dir, 'boltzmann_static.png')
+
+static_path = os.path.join(codeDir, 'boltzmann_static.png')
 plt.savefig(static_path, dpi=120)
 plt.close(fig)
 print(f"  Graphic saved: boltzmann_static.png")
+
+# X Position Histogram
+fig, ax = plt.subplots(figsize=(8, 5))
+
+ax.hist(data['x'], bins=20, color='steelblue', edgecolor='white', density=True)
+ax.set_xlabel('Posición en el eje x', fontsize=12)
+ax.set_ylabel('Densidad de Probabilidad', fontsize=12)
+ax.set_title('Histograma de posiciones en x de los centros de los discos', fontsize=13)
+ax.set_xlim(0, 1)
+plt.tight_layout()
+
+pos_x_path = os.path.join(codeDir, 'histogram_pos_x.png')
+plt.savefig(pos_x_path, dpi=120)
+plt.close(fig)
+print("  Histograma guardado: histogram_pos_x.png")
