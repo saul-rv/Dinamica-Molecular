@@ -9,3 +9,10 @@ c++/*.csv
 c++/a.out
 devenv.*
 .devenv/
+python/simulation.gif
+python/histogram_pos_x.png
+c++/build/
+c++/CMakeCache.txt
+c++/CMakeFiles/
+.DS_Store
+.vscode/
