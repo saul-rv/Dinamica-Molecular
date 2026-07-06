@@ -9,13 +9,12 @@ class Particle:
     Atttibutes:
         - posX: A float indicating the x position of the particle
         - posY: A float indicating the y position of the particle
+        - radius: A float indicating the fixed radius of the particle
         - velX: A float indicating the x velocity of the particle
         - velY: A float indicating the y velocity of the particle
-        - radius: A float indicating the fixed radius of the particle
     """
 
-    radius = 0.1
-    def __init__(self, pos, vel=None):
+    def __init__(self, pos, vel=None, radius=0.1):
         """Initializes the instance with an initial position and velocity.
 
         vel is initialized as None so that each particle can be assigned
@@ -34,6 +33,8 @@ class Particle:
 
         self.velX = vel[0]
         self.velY = vel[1]
+
+        self.radius = radius
 
     def move(self, dt):
         self.posX += dt*self.velX

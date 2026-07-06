@@ -43,8 +43,8 @@ def collision(particle1, particle2):
 t = 0
 tf = 20
 dt = 0.02
-particles = [Particle([0.25,0.25]), Particle([0.75,0.75]),
-             Particle([0.25,0.75]), Particle([0.75,0.25])]
+particles = [Particle([0.25,0.25], radius = 0.12), Particle([0.75,0.75]),
+             Particle([0.25,0.75], radius = 0.075), Particle([0.75,0.25], radius = 0.06)]
 
  
 # Register data for CSV
@@ -55,11 +55,6 @@ records = [(0.0, idx+1, p.posX, p.posY, p.velX, p.velY,
 # Snapshot list for animation
 snapshots = [(t, [(p.posX, p.posY, p.velX, p.velY) for p in particles])]
 
-print(f"{t:.2f}:")
-print(f"p1 = {particles[0].posX},{particles[0].posY}")
-print(f"p2 = {particles[1].posX},{particles[1].posY}")
-
-while (t <= tf):
 while t <= tf:
     t += dt
     for p in particles:
@@ -79,10 +74,6 @@ while t <= tf:
             records.append((t, idx+1, p.posX, p.posY, p.velX, p.velY, spd))
 
     snapshots.append((t, [(p.posX, p.posY, p.velX, p.velY) for p in particles]))
-
-    print(f"{t:.2f}:")
-    print(f"p1 = {particles[0].posX},{particles[0].posY}")
-    print(f"p2 = {particles[1].posX},{particles[1].posY}")
 
 # Export CSV
 csv_path = os.path.join(code_dir, 'results_python.csv')
