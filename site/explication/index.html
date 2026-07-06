@@ -384,7 +384,125 @@
 <li>Aumentar el número de discos presentes, así como también poder variar el radio <span class="arithmatex">\(r\)</span> de los discos.</li>
 <li>Elaborar un histograma de las posiciones de los centros de los discos a lo largo del eje <span class="arithmatex">\(x\)</span>.</li>
 </ul>
+<h1 id="fundamentos">Fundamentos</h1>
+<p><strong>Toda la mate y fisica para resolver, analisis y ecuaciones</strong></p>
 <h1 id="solucion-del-problema">Solución del Problema</h1>
+<p>En primer lugar, se establece las clase <strong>Particle</strong> la cual contiene el estado de cada disco y sus métodos físicos</p>
+<p>Teniendo el objeto de estudio definido, el <strong>Main</strong> se encarga de llevar a cabo la simulación completa. </p>
+<h2 id="condiciones-iniciales">Condiciones Iniciales</h2>
+<p>Para el caso de estudio se establece el número de particulas en <span class="arithmatex">\(N = 4\)</span> y se designan sus posiciones dentro de la caja:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Particula</th>
+<th style="text-align: center;">Posición</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">[0.25, 0.25]</td>
+</tr>
+<tr>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">[0.75, 0.75]</td>
+</tr>
+<tr>
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">[0.25, 0.75]</td>
+</tr>
+<tr>
+<td style="text-align: center;">4</td>
+<td style="text-align: center;">[0.75, 0.25]</td>
+</tr>
+</tbody>
+</table>
+<p>El siguiente paso es determinar las velocidades iniciales para cada particula, cada una de estas debe de ser independiente y generada aleatoriamente, esto se implemento mediante la función:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Lenguaje</th>
+<th style="text-align: center;">FunciónS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">Python</td>
+<td style="text-align: center;"><strong>random.random()</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;">C++</td>
+<td style="text-align: center;"><strong>a</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="rutinas">Rutinas</h2>
+<p>Al tener las condiciones iniciales del sistema establecidas, lo siguiente es determinar las rutinas para <strong>Detectar</strong> y <strong>Resolver</strong> las colisiones que sucedan dentro de la caja, ya sea contra las paredes o entre las particulas.</p>
+<h3 id="colision-entre-paredes">Colisión entre paredes</h3>
+<h4 id="python-edgecolision">Python - edgeColision():</h4>
+<p>La clase Particle verifica, para cada componente espacial, si el disco ha alcanzado o sobrepasado el límite de la caja considerando su radio. Al detectarse una colisión, la componente de velocidad perpendicular a la pared se invierte tomando su valor absoluto, lo cual garantiza que el disco siempre se aleje de la pared independientemente de si llegó exactamente al límite o lo cruzó ligeramente por efecto del paso de tiempo discreto.</p>
+<pre><code>def edgeColision(self):
+        &quot;&quot;&quot;Checks for colision with edges.&quot;&quot;&quot;
+        if self.posX &lt;= self.radius:
+            self.velX = abs(self.velX)
+        elif self.posX &gt;= 1-self.radius:
+            self.velX = -abs(self.velX)
+
+        if self.posY &lt;= self.radius:
+            self.velY = abs(self.velY)
+        elif self.posY &gt;= 1-self.radius:
+            self.velY = -abs(self.velY)
+</code></pre>
+<h4 id="c-">C++ -</h4>
+<h3 id="colision-entre-discos">Colisión entre discos</h3>
+<h4 id="python-colision">Python - colision():</h4>
+<p>Calcula las nuevas velocidades de dos discos que se solapan. El algoritmo primero verifica que los discos se estén acercando, si el producto punto entre la diferencia de velocidades y la diferencia de posiciones es positivo, las partículas ya se están separando y no se modifica ninguna velocidad. De lo contrario, se aplica la fórmula de colisión elástica bidimensional.</p>
+<pre><code>def colision(particle1, particle2):
+    '''Modifies the velocity of 2 colliding particles
+
+    The calculation is based on the equation found in:
+    https://en.wikipedia.org/wiki/Elastic_collision#Two-dimensional_collision_with_two_moving_objects
+    It additionally verifies that the particles are moving towards each other, and otherwise does not
+    modify their velocities
+
+    Args:
+        particle1: First particle whose velocity to modify
+        particle1: Second particle whose velocity to modify
+    '''
+    a = (particle1.velX-particle2.velX)*(particle1.posX-particle2.posX) \
+        + (particle1.velY-particle2.velY)*(particle1.posY-particle2.posY)
+    if a&gt;0: return
+    b = (particle1.posX-particle2.posX)**2 + (particle1.posY-particle2.posY)**2
+
+    particle1.velX -= (particle1.posX-particle2.posX)*a/b
+    particle1.velY -= (particle1.posY-particle2.posY)*a/b
+    particle2.velX -= (particle2.posX-particle1.posX)*a/b
+    particle2.velY -= (particle2.posY-particle1.posY)*a/b
+</code></pre>
+<h4 id="c-_1">C++ -</h4>
+<h2 id="visualizacion">Visualización</h2>
+<h2 id="distribucion-de-velocidades">Distribución de Velocidades</h2>
+<p>En dos dimensiones, la distribución de la rapidez escalar <span class="arithmatex">\(v = |v| = \sqrt(vx²+vy²)\)</span> resulta ser la distribución de Rayleigh, que es el caso bidimensional de la distribución de Maxwell-Boltzmann:</p>
+<div class="arithmatex">\[
+f(v) = a · v · \exp(\frac{-a · v^2}{2}), \qquad con \quad a = \frac{2}{&lt;v^2&gt;}
+\]</div>
+<pre><code>def mb_2d(v, v2_mean):
+    &quot;&quot;&quot;Maxwell-Boltzmann in 2 dimensions (Rayleigh distribution).
+
+    f(v) = a · v · exp(−a · v² / 2)   con  a = 2 / &lt;v²&gt;
+
+    Args:
+        v:       array of speed values
+        v2_mean: estimated mean of v²
+
+    Returns:
+        Array values of the Maxwell-Boltzmann distribution
+    &quot;&quot;&quot;
+    if v2_mean &lt;= 0:
+        return np.zeros_like(v)
+    a = 2.0 / v2_mean
+    return a * v * np.exp(-a * v**2 / 2)
+</code></pre>
 
 
 
