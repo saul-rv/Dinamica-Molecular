@@ -3,9 +3,12 @@ python/*.csv
 python/*.gif
 python/*.png
 site/
-c++/*.o
-c++/*.x
-c++/*.csv
-c++/a.out
+c++/graphical/*.o
+c++/graphical/*.x
+c++/graphical/*.out
+c++/data/*.o
+c++/data/*.x
+c++/data/*.out
+c++/data/*.csv
 devenv.*
 .devenv/

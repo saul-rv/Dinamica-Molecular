@@ -21,7 +21,7 @@ data = pd.read_csv(csvPath)
 unique_times = data['t'].unique()
 speeds_by_time = data.groupby('t')['speed'].apply(list).to_dict()
 
-anim_times = unique_times[::10] 
+anim_times = unique_times 
 
 cumulative = []
 frame_data = []
@@ -38,13 +38,12 @@ def update(frame_idx):
     t_val, speeds = frame_data[frame_idx]
     ax.clear()
 
-    ax.hist(speeds, bins=20, color='tomato', edgecolor='white',
-            density=True, alpha=0.80, label='Simulated data (2D)')
+    ax.hist(speeds, bins=30, color='tomato', edgecolor='white',
+            density=True, alpha=0.80, label='Datos Simulados')
 
     ax.set_xlabel('Speed |v|', fontsize=11)
     ax.set_ylabel('Probability density', fontsize=11)
     ax.set_title(f'Distribución de las velocidades — t = {t_val:.2f}', fontsize=12)
-    ax.legend(loc='upper right', fontsize=10)
 
 ani = animation.FuncAnimation(fig, update, frames=len(frame_data), blit=False)
 gif_path = os.path.join(codeDir, 'boltzmann.gif')
